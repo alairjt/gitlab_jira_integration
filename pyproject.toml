@@ -1,0 +1,38 @@
+[build-system]
+requires = ["setuptools>=61.0"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "gitlab-jira-integration"
+version = "0.0.1"
+authors = [
+  { name="Author Name", email="author@example.com" },
+]
+description = "A small example package"
+readme = "README.md"
+requires-python = ">=3.7"
+dependencies = [
+    "python-gitlab",
+    "jira",
+    "semver",
+    "pyyaml",
+]
+classifiers = [
+    "Programming Language :: Python :: 3",
+    "License :: OSI Approved :: MIT License",
+    "Operating System :: OS Independent",
+]
+
+[project.urls]
+"Homepage" = "https://github.com/pypa/sampleproject"
+"Bug Tracker" = "https://github.com/pypa/sampleproject/issues"
+
+[project.scripts]
+gitlab-jira-integration = "gitlab_jira_integration.main:main"
+
+[project.optional-dependencies]
+test = [
+    "pytest",
+    "pytest-mock",
+    "responses",
+]
