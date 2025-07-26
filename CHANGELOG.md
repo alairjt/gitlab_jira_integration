@@ -7,6 +7,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Changed
+- Subtask descriptions are now dynamically populated with content from version-specific files upon creation, instead of being updated afterward. The subtask summary must match the version file name (case-insensitive, extension ignored).
+
 ## [1.0.0] - 2025-07-25
 
 ### Added

@@ -8,6 +8,7 @@ class JiraClient:
         self.server = server or os.getenv("JIRA_SERVER")
         self.basic_auth = basic_auth or (os.getenv("JIRA_USER"), os.getenv("JIRA_TOKEN"))
         self.config_manager = config_manager
+        self.version_path = os.getenv("VERSION_PATH")
 
         if not self.server:
             raise ValueError("Jira server URL is required.")
@@ -70,10 +71,9 @@ class JiraClient:
                 issue_dict[field] = self._process_custom_field_value(value, variables)
 
         new_issue = self._create_issue_with_fallback(issue_dict)
-
         if 'subtasks' in template:
             for subtask_template in template['subtasks']:
-                self.create_subtask_from_template(new_issue.key, subtask_template, variables)
+                self.create_subtask_from_template(new_issue["key"], subtask_template, variables)
 
         return new_issue
 
@@ -81,8 +81,22 @@ class JiraClient:
         """
         Creates a Jira sub-task from a template.
         """
+        name = template['name']
         summary = self._apply_template(template['summary'], variables)
         description = self._apply_template(template['description'], variables)
+
+        version_path = os.path.join(self.version_path, variables.get('version', ''))
+        if os.path.exists(version_path):
+            for filename in os.listdir(version_path):
+                extension = os.path.splitext(filename)[1][1:]
+                if os.path.splitext(filename)[0].lower() == name.lower():
+                    with open(os.path.join(version_path, filename), 'r') as f:
+                        content = f.read()
+                        if extension.lower() == 'sql':
+                            content = "{code:sql}{{content}}{code}".replace("{{content}}", content)
+                        description += '\n\n' + content
+                    break
+
         issue_type_name = self.config_manager.get_issue_type(template['issue_type'])
         issue_type = next((t for t in self.jira.issue_types() if t.name == issue_type_name), None)
         parent_issue = self.jira.issue(parent_issue_key)

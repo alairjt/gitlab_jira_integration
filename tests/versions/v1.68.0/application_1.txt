@@ -1,0 +1,7 @@
+This is the content of mercantil-core.txt.
+
+adicionar variavel de ambiente:
+
+JIRA_TASK_APPLICATION_ID=22
+JIRA_TASK_ENVIRONMENT_ID=22
+JIRA_TASK_PROJECT_ID=2

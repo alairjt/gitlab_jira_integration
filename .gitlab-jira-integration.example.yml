@@ -1,0 +1,56 @@
+# .gitlab-jira-integration.yml
+# Example configuration file for creating Jira issues and subtasks.
+
+# Defines the available issue types that can be used in the templates.
+# The key is an alias used in the templates section, and the value is the actual Jira Issue Type name.
+issue_types:
+  release_type: Release
+  devops_task_type: DevOps Task
+  dba_task_type: DBA Task
+
+# A list of templates that can be used to create issues.
+templates:
+  - name: application_release
+    project: PROJ
+    issue_type: release_type
+    summary: "Deploy Application XYZ - {{ version }}"
+    description: |
+      h2. Deploy Application XYZ - {{ version }}
+
+      *Release notes:*
+      {{ release_notes_url }}
+    custom_fields:
+      customfield_10001:
+        id: "{{ application_id }}" # Application
+      customfield_10002:
+        id: "{{ environment_id }}" # Environment
+      customfield_10003: "{{ release_notes_url }}" # URL Release Notes
+      customfield_10004: "{{ version }}" # Version
+    subtasks:
+      - issue_type: dba_task_type
+        name: database-scripts # This name should match a file in the versions directory (e.g., database-scripts.sql)
+        summary: "Run database migration scripts"
+        description: |
+          h2. Run database migration scripts
+
+          Execute the migration scripts attached or included below.
+      - issue_type: devops_task_type
+        name: deploy-frontend # This name should match a file in the versions directory (e.g., deploy-frontend.txt)
+        summary: "Deploy Frontend Application"
+        description: |
+          h2. Deploy Frontend Application
+
+          Deploy the new version of the frontend application to all servers.
+
+          Image:
+          https://git-registry.example.com/group/project-frontend/tags/{{ version }}
+      - issue_type: devops_task_type
+        name: deploy-backend # This name should match a file in the versions directory (e.g., deploy-backend.txt)
+        summary: "Deploy Backend Application"
+        description: |
+          h2. Deploy Backend Application
+
+          Deploy the new version of the backend application to all servers.
+
+          Image:
+          https://git-registry.example.com/group/project-backend/tags/{{ version }}
