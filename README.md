@@ -1,38 +1,160 @@
-# GitLab JIRA Integration
+# GitLab Jira Integration
 
-This tool automates the creation of Jira issues and subtasks based on templates, with the ability to dynamically populate subtask descriptions from version-specific files.
+[![Python Version](https://img.shields.io/badge/python-3.7+-blue.svg)](https://www.python.org/downloads/)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+[![PyPI Version](https://img.shields.io/pypi/v/gitlab-jira-integration.svg)](https://pypi.org/project/gitlab-jira-integration/)
 
-## Features
+Automate Jira issue and subtask creation from GitLab CI/CD pipelines with dynamic content population from versioned files.
 
-- Create Jira issues from predefined templates.
-- Automatically create subtasks associated with the main issue.
-- Dynamically populate subtask descriptions with content from files stored in a versioned directory structure.
-- Use variables (like version, application name, etc.) to customize issues and subtasks.
+## ✨ Features
 
-## How it Works
+- **Template-based** issue and subtask creation in Jira
+- **Version-aware** content population from files
+- **Test mode** for safe validation of issue creation
+- **CI/CD ready** with comprehensive environment variable support
+- **Detailed reporting** of all operations in test mode
 
-The integration uses a YAML configuration file (`.gitlab-jira-integration.yml`) to define templates for Jira issues and their corresponding subtasks.
+## 🚀 Quick Start
 
-When a new issue is created using a template:
+### Installation
 
-1.  A main issue is created in Jira based on the template's `summary`, `description`, and other fields.
-2.  For each entry in the `subtasks` list of the template, a corresponding subtask is created under the main issue.
-3.  The tool then looks for a directory under `tests/versions/` that matches the `VERSION` variable provided.
-4.  Inside that version directory, it searches for a file whose name (excluding the extension) is a case-insensitive match for the subtask's summary.
-5.  If a matching file is found, its content is appended to that subtask's description.
+```bash
+pip install gitlab-jira-integration
+```
 
-### Example Workflow
+### Basic Usage
 
-1.  You have a subtask template with the summary: `Deploy Frontend Application`.
-2.  You trigger the process with the version `2.5.1`.
-3.  The tool will look in the directory: `tests/versions/2.5.1/`.
-4.  It will search for a file like `deploy frontend application.txt`, `Deploy Frontend Application.md`, etc.
-5.  If found, the contents of that file are added to the description of the "Deploy Frontend Application" subtask in Jira.
+```bash
+# Run in production mode
+gitlab-jira-integration
 
-## Configuration
+# Run in test mode (no changes made, generates report)
+export TEST_MODE=true
+gitlab-jira-integration
+```
 
-See the `.gitlab-jira-integration.example.yml` file for a detailed example of how to configure your templates and issue types.
+## 📋 Configuration
 
-## Usage
+### Environment Variables
 
-The main entry point is the `JiraClient` class, which can be used to create issues from your defined templates. You will need to provide the necessary variables (like `VERSION`) when calling it.
+| Variable | Required | Description |
+|----------|----------|-------------|
+| `JIRA_SERVER` | ✅ | URL of your Jira instance |
+| `JIRA_USER` | ✅ | Jira username or email |
+| `JIRA_TOKEN` | ✅ | Jira API token |
+| `GITLAB_PRIVATE_TOKEN` | ✅ | GitLab personal access token |
+| `VERSION` | ✅ | Version to use for file lookups |
+| `VERSION_PATH` | ❌ | Base directory for version files (default: `./versions`) |
+| `TEST_MODE` | ❌ | Set to `true` to enable test mode (default: `false`) |
+| `CI_PROJECT_ID` | Auto | GitLab project ID |
+| `CI_COMMIT_REF_NAME` | Auto | Git branch/tag name |
+| `CI_COMMIT_SHA` | Auto | Git commit SHA |
+| `CI_MERGE_REQUEST_IID` | Auto | Merge request ID |
+
+### Configuration File
+
+Create a `.gitlab-jira-integration.yml` file in your project root:
+
+```yaml
+issue_types:
+  RA: Release Automation
+  Task: Task
+
+templates:
+  - name: release_task
+    project: GMA
+    issue_type: RA
+    summary: "Atualizacao da aplicacao +Capital - {{ version }}"
+    description: |
+      h2. Atualizacao da aplicacao +Capital - {{ version }}
+
+      *Release notes:*
+      {{ release_notes_url }}
+    custom_fields:
+      customfield_10092: "{{ application_id }}"  # Application
+      customfield_10093: "{{ environment_id }}"  # Environment
+    subtasks:
+      - name: "Deploy Frontend"
+        summary: "[{{ version }}] Deploy Frontend"
+        description: "Deploy the frontend application"
+        issue_type: Task
+        require_file: true
+      - name: "Run Migrations"
+        summary: "[{{ version }}] Run Database Migrations"
+        description: "Execute database migrations"
+        issue_type: Task
+        require_file: false
+```
+
+## 🔍 How It Works
+
+1. **Issue Creation**: Creates a main Jira issue using the specified template
+2. **File Lookup**: For each subtask with `require_file: true`:
+   - Looks in `VERSION_PATH/VERSION/` for files matching the subtask name
+   - Case-insensitive matching (e.g., "Deploy Frontend" matches "deploy_frontend.md")
+3. **Subtask Creation**: Creates subtasks, injecting file content when available
+4. **Test Mode**: When enabled:
+   - No actual API calls to Jira/GitLab
+   - Generates `jira_integration_report.md` with all operations
+
+### Example Report
+
+```markdown
+# GitLab-Jira Integration Report
+
+**Test Mode**: ✅ Enabled  
+**Generated at**: 2025-07-28T14:30:45.123456
+
+## Create Issue Operations
+
+### Operation 1 - 2025-07-28T14:30:45.123456
+```json
+{
+  "project": "GMA",
+  "summary": "Atualizacao da aplicacao +Capital - v1.2.3",
+  "description": "h2. Atualizacao da aplicacao - v1.2.3\n\n*Release notes:*\nhttps://jira.example.com/release/1.2.3",
+  "issue_type": "Release Automation"
+}
+```
+
+## Create Subtask Operations
+
+### Operation 1 - 2025-07-28T14:30:45.234567
+```json
+{
+  "parent_issue_key": "GMA-123",
+  "name": "Deploy Frontend",
+  "summary": "[v1.2.3] Deploy Frontend",
+  "file_found": true,
+  "file_content": "Steps to deploy frontend..."
+}
+```
+
+## 🛠️ Development
+
+### Installation from Source
+
+```bash
+git clone https://github.com/alairjt/gitlab-jira-integration.git
+cd gitlab-jira-integration
+pip install -e .
+```
+
+### Running Tests
+
+```bash
+pip install -e ".[test]"
+pytest
+```
+
+## 📄 License
+
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+
+## 🤝 Contributing
+
+Contributions are welcome! Please feel free to submit a Pull Request.
+
+## 📧 Contact
+
+Alair Junior - [@alairjt](https://github.com/alairjt) - alairjt@gmail.com

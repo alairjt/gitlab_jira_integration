@@ -1,5 +1,7 @@
 import gitlab
 import os
+from typing import Optional, Dict, Any
+from .test_mode import test_logger
 
 class GitLabClient:
     def __init__(self, private_token=None, project_id=None, url=None):
@@ -29,9 +31,18 @@ class GitLabClient:
         mr = self.project.mergerequests.get(merge_request_iid)
         return mr.changes()
 
-    def create_tag(self, tag_name, ref, message=None):
+    def create_tag(self, tag_name: str, ref: str, message: Optional[str] = None) -> Dict[str, Any]:
         """
         Creates a new tag in the project.
+        In test mode, logs the operation instead of creating the tag.
+        
+        Args:
+            tag_name: Name of the tag to create
+            ref: Git reference (commit SHA) to tag
+            message: Optional message for the tag
+            
+        Returns:
+            Dict containing tag information or test mode response
         """
         tag_name = tag_name.replace(' ', '').strip().lower()
         tag_data = {
@@ -39,5 +50,30 @@ class GitLabClient:
             'ref': ref,
             'message': message or f"Release version {tag_name}"
         }
-        tag = self.project.tags.create(tag_data)
-        return tag
+        
+        # Log the operation
+        operation_details = {
+            'tag_name': tag_name,
+            'ref': ref,
+            'message': tag_data['message'],
+            'project_id': self.project_id
+        }
+        
+        if test_logger.is_enabled():
+            test_logger.log_operation('create_tag', operation_details)
+            return {
+                'name': tag_name,
+                'message': 'Tag creation skipped - test mode',
+                'test_mode': True
+            }
+            
+        # In normal mode, actually create the tag
+        try:
+            tag = self.project.tags.create(tag_data)
+            operation_details['created'] = True
+            test_logger.log_operation('create_tag', operation_details)
+            return tag
+        except Exception as e:
+            operation_details['error'] = str(e)
+            test_logger.log_operation('create_tag_error', operation_details)
+            raise

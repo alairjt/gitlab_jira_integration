@@ -29,6 +29,7 @@ templates:
     subtasks:
       - issue_type: dba_task_type
         name: database-scripts # This name should match a file in the versions directory (e.g., database-scripts.sql)
+        require_file: true # Only create this subtask if a matching file exists in the version directory
         summary: "Run database migration scripts"
         description: |
           h2. Run database migration scripts
@@ -36,6 +37,7 @@ templates:
           Execute the migration scripts attached or included below.
       - issue_type: devops_task_type
         name: deploy-frontend # This name should match a file in the versions directory (e.g., deploy-frontend.txt)
+        require_file: true # Only create this subtask if a matching file exists in the version directory
         summary: "Deploy Frontend Application"
         description: |
           h2. Deploy Frontend Application
@@ -44,8 +46,9 @@ templates:
 
           Image:
           https://git-registry.example.com/group/project-frontend/tags/{{ version }}
-      - issue_type: devops_task_type
+- issue_type: devops_task_type
         name: deploy-backend # This name should match a file in the versions directory (e.g., deploy-backend.txt)
+        require_file: true # Only create this subtask if a matching file exists in the version directory
         summary: "Deploy Backend Application"
         description: |
           h2. Deploy Backend Application
