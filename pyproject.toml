@@ -5,7 +5,7 @@ build-backend = "setuptools.build_meta"
 [project]
 name = "gitlab-jira-integration"
 version = "0.2.3"
-description = "GitLab Jira Integration
+description = "GitLab Jira Integration"
 authors = [
   { name="Alair Junior", email="alairjt@gmail.com" },
 ]
