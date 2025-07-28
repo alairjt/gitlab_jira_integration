@@ -4,11 +4,11 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "gitlab-jira-integration"
-version = "0.0.1"
+version = "0.1.0"
 authors = [
-  { name="Author Name", email="author@example.com" },
+  { name="Alair Junior", email="alairjt@gmail.com" },
 ]
-description = "A small example package"
+description = "GitLab Jira Integration"
 readme = "README.md"
 requires-python = ">=3.7"
 dependencies = [
@@ -24,8 +24,8 @@ classifiers = [
 ]
 
 [project.urls]
-"Homepage" = "https://github.com/pypa/sampleproject"
-"Bug Tracker" = "https://github.com/pypa/sampleproject/issues"
+"Homepage" = "https://github.com/alairjt/gitlab-jira-integration"
+"BugTracker" = "https://github.com/alairjt/gitlab-jira-integration/issues"
 
 [project.scripts]
 gitlab-jira-integration = "gitlab_jira_integration.main:main"
