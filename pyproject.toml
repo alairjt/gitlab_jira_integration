@@ -24,8 +24,8 @@ classifiers = [
 ]
 
 [project.urls]
-"Homepage" = "https://github.com/alairjt/gitlab-jira-integration"
-"BugTracker" = "https://github.com/alairjt/gitlab-jira-integration/issues"
+"Homepage" = "https://github.com/alairjt/gitlab_jira_integration"
+"BugTracker" = "https://github.com/alairjt/gitlab_jira_integration/issues"
 
 [project.scripts]
 gitlab-jira-integration = "gitlab_jira_integration.main:main"
