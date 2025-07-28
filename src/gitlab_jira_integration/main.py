@@ -21,10 +21,9 @@ def print_environment_info():
 
     # Print important environment variables
     env_vars = [
-        'CI_PROJECT_ID', 'CI_COMMIT_REF_NAME', 'CI_COMMIT_SHA', 
-        'CI_MERGE_REQUEST_IID', 'JIRA_PROJECT_KEY'
+        'CI_PROJECT_ID', 'CI_COMMIT_REF_NAME', 'CI_COMMIT_SHA', 'JIRA_PROJECT_KEY'
     ]
-    
+
     print("Environment variables:")
     for var in env_vars:
         value = os.getenv(var, 'Not set')
@@ -98,14 +97,6 @@ def main():
         print(error_msg)
         test_logger.log_operation('error', {'message': error_msg, 'version': version})
         # Continue execution even if tag creation fails
-
-    # Get merge request info from GitLab
-    merge_request_iid = os.getenv("CI_MERGE_REQUEST_IID")
-    if not merge_request_iid:
-        error_msg = "Merge request IID not found. Set CI_MERGE_REQUEST_IID environment variable."
-        print(error_msg)
-        test_logger.log_operation('error', {'message': error_msg})
-        return 1
 
     # Create a Jira issue
     application_id = os.getenv("JIRA_TASK_APPLICATION_ID")

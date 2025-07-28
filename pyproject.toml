@@ -4,11 +4,11 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "gitlab-jira-integration"
-version = "0.2.2"
+version = "0.2.3"
+description = "GitLab Jira Integration
 authors = [
   { name="Alair Junior", email="alairjt@gmail.com" },
 ]
-description = "GitLab Jira Integration"
 readme = "README.md"
 requires-python = ">=3.7"
 dependencies = [

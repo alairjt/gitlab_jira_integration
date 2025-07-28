@@ -49,7 +49,6 @@ gitlab-jira-integration
 | `CI_PROJECT_ID` | Auto | GitLab project ID |
 | `CI_COMMIT_REF_NAME` | Auto | Git branch/tag name |
 | `CI_COMMIT_SHA` | Auto | Git commit SHA |
-| `CI_MERGE_REQUEST_IID` | Auto | Merge request ID |
 
 ### Configuration File
 
