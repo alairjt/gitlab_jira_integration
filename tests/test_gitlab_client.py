@@ -6,7 +6,7 @@ from gitlab_jira_integration.gitlab_client import GitLabClient
 def gitlab_client(mocker):
     mocker.patch.dict('os.environ', {
         'GITLAB_URL': 'https://gitlab.example.com',
-        'GITLAB_PRIVATE_TOKEN': 'test_token',
+        'GITLAB_TOKEN': 'test_token',
         'CI_PROJECT_ID': '123'
     })
     with patch('gitlab.Gitlab') as mock_gitlab:

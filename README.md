@@ -42,7 +42,7 @@ gitlab-jira-integration
 | `JIRA_SERVER` | ✅ | URL of your Jira instance |
 | `JIRA_USER` | ✅ | Jira username or email |
 | `JIRA_TOKEN` | ✅ | Jira API token |
-| `GITLAB_PRIVATE_TOKEN` | ✅ | GitLab personal access token |
+| `GITLAB_TOKEN` | ✅ | GitLab personal access token |
 | `VERSION` | ✅ | Version to use for file lookups |
 | `VERSION_PATH` | ❌ | Base directory for version files (default: `./versions`) |
 | `TEST_MODE` | ❌ | Set to `true` to enable test mode (default: `false`) |

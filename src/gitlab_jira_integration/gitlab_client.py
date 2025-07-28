@@ -6,7 +6,7 @@ from .test_mode import test_logger
 class GitLabClient:
     def __init__(self, private_token=None, project_id=None, url=None):
         self.url = url or os.getenv("CI_SERVER_URL")
-        self.private_token = private_token or os.getenv("GITLAB_PRIVATE_TOKEN")
+        self.private_token = private_token or os.getenv("GITLAB_TOKEN")
         self.project_id = project_id or os.getenv("CI_PROJECT_ID")
 
         if not self.private_token:
