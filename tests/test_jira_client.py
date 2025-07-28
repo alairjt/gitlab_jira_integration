@@ -16,7 +16,7 @@ def mock_config_manager():
 def jira_client(mock_config_manager):
     """Fixture for a mocked JiraClient."""
     with patch.dict('os.environ', {
-        'JIRA_SERVER': 'https://jira.example.com',
+        'JIRA_URL': 'https://jira.example.com',
         'JIRA_USER': 'user@example.com',
         'JIRA_TOKEN': 'token'
     }), patch('gitlab_jira_integration.jira_client.JIRA') as mock_jira_class:

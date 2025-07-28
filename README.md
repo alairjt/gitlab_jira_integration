@@ -39,7 +39,7 @@ gitlab-jira-integration
 
 | Variable | Required | Description |
 |----------|----------|-------------|
-| `JIRA_SERVER` | ✅ | URL of your Jira instance |
+| `JIRA_URL` | ✅ | URL of your Jira instance |
 | `JIRA_USER` | ✅ | Jira username or email |
 | `JIRA_TOKEN` | ✅ | Jira API token |
 | `GITLAB_TOKEN` | ✅ | GitLab personal access token |

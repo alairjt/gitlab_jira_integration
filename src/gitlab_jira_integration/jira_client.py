@@ -7,7 +7,7 @@ from .test_mode import test_logger
 
 class JiraClient:
     def __init__(self, config_manager, server=None, basic_auth=None):
-        self.server = server or os.getenv("JIRA_SERVER")
+        self.server = server or os.getenv("JIRA_URL")
         self.basic_auth = basic_auth or (os.getenv("JIRA_USER"), os.getenv("JIRA_TOKEN"))
         self.config_manager = config_manager
         self.version_path = os.getenv("VERSION_PATH")
