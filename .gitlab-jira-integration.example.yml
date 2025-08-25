@@ -39,6 +39,7 @@ templates:
         name: deploy-frontend # This name should match a file in the versions directory (e.g., deploy-frontend.txt)
         require_file: true # Only create this subtask if a matching file exists in the version directory
         summary: "Deploy Frontend Application"
+        reporter: user # Reporter
         description: |
           h2. Deploy Frontend Application
 

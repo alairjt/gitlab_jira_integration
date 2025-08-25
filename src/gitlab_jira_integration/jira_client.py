@@ -89,6 +89,10 @@ class JiraClient:
                 'test_mode': True
             }
             
+            # Adiciona o reporter no modo de teste se estiver definido
+            if 'reporter' in template:
+                test_response['fields']['reporter'] = {'name': self._apply_template(template['reporter'], variables)}
+            
             # Log the test issue creation
             test_logger.log_operation('create_issue', operation_details)
             
@@ -111,6 +115,10 @@ class JiraClient:
                 'description': description,
                 'issuetype': {'id': issue_type.id},
             }
+
+            # Adiciona o reporter se estiver definido no template
+            if 'reporter' in template:
+                issue_dict['reporter'] = {'name': self._apply_template(template['reporter'], variables)}
 
             if 'custom_fields' in template:
                 for field, value in template['custom_fields'].items():
